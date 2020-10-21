@@ -20,7 +20,11 @@ namespace RecipeApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddCosmosRepository(Configuration);
+            services.AddCosmosRepository(Configuration, config =>
+            {
+                config.CosmosConnectionString = 
+                    Configuration.GetConnectionString("RecipesConnectionString");
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RecipeApi", Version = "v1" });
@@ -38,7 +42,7 @@ namespace RecipeApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
+                app.UseSwagger(c => c.SerializeAsV2 = true);
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RecipeApi v1"));
             }
 

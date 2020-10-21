@@ -27,12 +27,10 @@ namespace RecipeApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Name = nameof(GetRecipes))]
-        [Produces("application/json")]
-        [Consumes("application/json")]
         public async ValueTask<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
             var result = await _recipeRepository.GetAsync(x => x.Id != null);
-            return new OkObjectResult(result);
+            return new JsonResult(result);
         }
 
         /// <summary>
@@ -41,14 +39,12 @@ namespace RecipeApi.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}", Name = nameof(GetRecipe))]
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        public async ValueTask<ActionResult<IEnumerable<Recipe>>> GetRecipe(string id)
+        public async ValueTask<ActionResult<Recipe>> GetRecipe(string id)
         {
             try
             {
                 var result = await _recipeRepository.GetAsync(id);
-                return new OkObjectResult(result);
+                return new JsonResult(result);
             }
             catch
             {
@@ -62,15 +58,13 @@ namespace RecipeApi.Controllers
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("Search/{name}", Name = nameof(SearchRecipesByName))]
-        [Produces("application/json")]
-        [Consumes("application/json")]
         public async ValueTask<ActionResult<IEnumerable<Recipe>>> SearchRecipesByName(string name)
         {
             try
             {
                 var result = await _recipeRepository.GetAsync(
                     r => r.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
-                return new OkObjectResult(result);
+                return new JsonResult(result);
             }
             catch
             {
@@ -84,8 +78,6 @@ namespace RecipeApi.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost(Name = nameof(CreateRecipe))]
-        [Produces("application/json")]
-        [Consumes("application/json")]
         public async ValueTask<ActionResult<Recipe>> CreateRecipe(
             [FromBody] NewRecipeRequest request)
         {
@@ -110,8 +102,6 @@ namespace RecipeApi.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}", Name = nameof(AddIngredientToRecipe))]
-        [Produces("application/json")]
-        [Consumes("application/json")]
         public async ValueTask<ActionResult<Recipe>> AddIngredientToRecipe(
             string id,
             [FromBody] AddIngredientToRecipeRequest request)
