@@ -24,6 +24,8 @@ namespace RecipeApi
             {
                 config.CosmosConnectionString = 
                     Configuration.GetConnectionString("RecipesConnectionString");
+                config.DatabaseId = "RecipeDatabase";
+                config.ContainerPerItemType = true;
             });
             services.AddSwaggerGen(c =>
             {
