@@ -11,6 +11,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="C:\Users\brady\.nuget\packages\ievangelist.azure.cosmosrepository\2.0.2\contentFiles\any\netstandard2.0\ThirdPartyNotice.txt" />
+	  <Content Remove="C:\Users\brady\.nuget\packages\microsoft.azure.cosmos\3.14.0\contentFiles\any\netstandard2.0\ThirdPartyNotice.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="IEvangelist.Azure.CosmosRepository" Version="2.0.2" />
 		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.14.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
