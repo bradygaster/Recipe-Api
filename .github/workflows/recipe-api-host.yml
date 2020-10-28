@@ -22,7 +22,7 @@ jobs:
     - name: Restore packages
       run: dotnet restore "${{ env.PROJECT_PATH }}" -r win-x86
     - name: Build app
-      run: dotnet build "${{ env.PROJECT_PATH }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "${{ env.PROJECT_PATH }}" --configuration ${{ env.CONFIGURATION }} --no-restore -r win-x86
     - name: Test app
       run: dotnet test "${{ env.PROJECT_PATH }}" --no-build
     - name: Publish app for deploy
