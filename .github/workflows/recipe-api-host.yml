@@ -20,7 +20,7 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: Restore packages
-      run: dotnet restore "${{ env.PROJECT_PATH }}"
+      run: dotnet restore "${{ env.PROJECT_PATH }}" -r win-x86
     - name: Build app
       run: dotnet build "${{ env.PROJECT_PATH }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test app
