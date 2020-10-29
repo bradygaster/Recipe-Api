@@ -42,3 +42,7 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Import API into Azure API Management
+      run: |
+        az apim api import --specification-format Swagger --subscription-required false --path "recipes/v1" --resource-group RecipeApiGroup --service-name recipe-apis --api-id RecipeApi --service-url "https://recipe-api-host.azurewebsites.net" --specification-url "https://recipe-api-host.azurewebsites.net/swagger/v1/swagger.json" 
+      
