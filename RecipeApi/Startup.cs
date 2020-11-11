@@ -4,9 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using System;
-using System.IO;
-using System.Reflection;
 
 namespace RecipeApi
 {
@@ -20,7 +17,11 @@ namespace RecipeApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // i'm using David Pine's nifty Cosmos Repository
             services.AddCosmosRepository(Configuration);
+
+            // add the various swashbuckle services that "turn on" Open API generation
             services.AddSwaggerGen(c =>
             {
                 // turn on Open API doc generation using Swashbuckle

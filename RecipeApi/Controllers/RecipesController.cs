@@ -30,7 +30,7 @@ namespace RecipeApi.Controllers
         public async ValueTask<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
             var result = await _recipeRepository.GetAsync(x => x.Id != null);
-            return new JsonResult(result);
+            return new JsonResult(result.OrderBy(x => x.Name));
         }
 
         /// <summary>
