@@ -20,20 +20,14 @@ namespace RecipeApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddCosmosRepository(Configuration, config =>
-            {
-                config.CosmosConnectionString = Configuration.GetConnectionString("RecipesConnectionString");
-                config.DatabaseId = "RecipeDatabase";
-                config.ContainerPerItemType = true;
-            });
+            services.AddCosmosRepository(Configuration);
             services.AddSwaggerGen(c =>
             {
+                // turn on Open API doc generation using Swashbuckle
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RecipeApi", Version = "v1" });
 
-                // generate the xml docs that'll drive the swagger docs
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                // read the XML doc comments into the Open API doc as documentation
+                c.EnableXmlDocComments();
             });
         }
 
@@ -43,8 +37,16 @@ namespace RecipeApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger(c => c.SerializeAsV2 = true);
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RecipeApi v1"));
+
+                // customize the swagger URL and format
+                app.UseSwagger(c =>
+                {
+                    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+                    c.SerializeAsV2 = true;
+                });
+
+                // turn on the nice UI page
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RecipeApi"));
             }
 
             app.UseHttpsRedirection();
