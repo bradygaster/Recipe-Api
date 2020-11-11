@@ -81,6 +81,11 @@ namespace RecipeApi.Controllers
         public async ValueTask<ActionResult<Recipe>> CreateRecipe(
             [FromBody] NewRecipeRequest request)
         {
+            if(string.IsNullOrEmpty(request.Name))
+            {
+                return new ConflictResult();
+            }
+
             var existing = await _recipeRepository.GetAsync(r => r.Name == request.Name);
             if(existing.Any())
             {
