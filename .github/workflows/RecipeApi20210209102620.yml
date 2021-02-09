@@ -1,12 +1,12 @@
-name: Build and deploy .NET Core application to Web App RecipeApi20210204153541
+name: Build and deploy .NET Core application to Web App RecipeApi20210209102620
 on:
   push:
     branches:
-    - main
+    - MyFeature
 env:
-  AZURE_WEBAPP_NAME: RecipeApi20210204153541
+  AZURE_WEBAPP_NAME: RecipeApi20210209102620
   AZURE_WEBAPP_PACKAGE_PATH: RecipeApi/published
-  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.RECIPEAPI20210204153541_FFFF }}
+  AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.RECIPEAPI20210209102620_FFFF }}
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 5.0.x
   WORKING_DIRECTORY: RecipeApi
