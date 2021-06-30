@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31422.448
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeApi", "RecipeApi\RecipeApi.csproj", "{3F9C760B-0359-4127-9D4F-FEA8F7EB9BD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeRating", "RecipeRating\RecipeRating.csproj", "{7C300F3E-2B5B-4E97-861A-9419C0B92017}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3F9C760B-0359-4127-9D4F-FEA8F7EB9BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F9C760B-0359-4127-9D4F-FEA8F7EB9BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F9C760B-0359-4127-9D4F-FEA8F7EB9BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C300F3E-2B5B-4E97-861A-9419C0B92017}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C300F3E-2B5B-4E97-861A-9419C0B92017}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C300F3E-2B5B-4E97-861A-9419C0B92017}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C300F3E-2B5B-4E97-861A-9419C0B92017}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
