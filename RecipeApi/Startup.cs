@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RecipeApi.Services;
+using RecipeApi.Services.Cosmos;
 using System;
 using System.IO;
 using System.Reflection;
@@ -20,15 +22,19 @@ namespace RecipeApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSingleton<IRecipeDataService, CosmosRecipeDataService>();
             services.AddCosmosRepository(Configuration, config =>
             {
                 config.CosmosConnectionString = Configuration.GetConnectionString("RecipesConnectionString");
                 config.DatabaseId = "RecipeDatabase";
                 config.ContainerPerItemType = true;
             });
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RecipeApi", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo 
+                { Title = "RecipeApi", Version = "v1" });
 
                 // generate the xml docs that'll drive the swagger docs
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

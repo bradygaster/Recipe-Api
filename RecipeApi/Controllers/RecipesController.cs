@@ -2,6 +2,7 @@
 using Microsoft.Azure.CosmosRepository;
 using RecipeApi.Data;
 using RecipeApi.ServiceModel;
+using RecipeApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,11 @@ namespace RecipeApi.Controllers
     [ApiController]
     public class RecipesController : ControllerBase
     {
-        readonly IRepository<Recipe> _recipeRepository;
-        readonly IRepository<Ingredient> _ingredientRepository;
+        private readonly IRecipeDataService _recipeDataService;
 
-        public RecipesController(IRepositoryFactory factory)
+        public RecipesController(IRepositoryFactory factory, IRecipeDataService recipeDataService)
         {
-            _recipeRepository = factory.RepositoryOf<Recipe>();
-            _ingredientRepository = factory.RepositoryOf<Ingredient>();
+            _recipeDataService = recipeDataService;
         }
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace RecipeApi.Controllers
         [HttpGet(Name = nameof(GetRecipes))]
         public async ValueTask<ActionResult<IEnumerable<Recipe>>> GetRecipes()
         {
-            var result = await _recipeRepository.GetAsync(x => x.Id != null);
+            var result = await _recipeDataService.GetRecipes();
             return new JsonResult(result);
         }
 
@@ -43,7 +42,7 @@ namespace RecipeApi.Controllers
         {
             try
             {
-                var result = await _recipeRepository.GetAsync(id);
+                var result = await _recipeDataService.GetRecipe(id);
                 return new JsonResult(result);
             }
             catch
@@ -62,8 +61,7 @@ namespace RecipeApi.Controllers
         {
             try
             {
-                var result = await _recipeRepository.GetAsync(
-                    r => r.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+                var result = await _recipeDataService.SearchForRecipes(name);
                 return new JsonResult(result);
             }
             catch
@@ -81,18 +79,19 @@ namespace RecipeApi.Controllers
         public async ValueTask<ActionResult<Recipe>> CreateRecipe(
             [FromBody] NewRecipeRequest request)
         {
-            var existing = await _recipeRepository.GetAsync(r => r.Name == request.Name);
-            if(existing.Any())
+            try
             {
-                return new ConflictResult();
+                var result = await _recipeDataService.CreateRecipe(new Recipe { Name = request.Name });
+                return new CreatedResult($"/api/recipes/{result.Id}", result);
             }
-
-            var result = await _recipeRepository.CreateAsync(new Recipe
+            catch(ArgumentException ex)
             {
-                Name = request.Name
-            });
-
-            return new CreatedResult($"/api/recipes/{result.Id}", result);
+                return new ConflictObjectResult(ex.Message);
+            }
+            catch
+            {
+                return new StatusCodeResult(500);
+            }
         }
 
         /// <summary>
@@ -108,28 +107,17 @@ namespace RecipeApi.Controllers
         {
             try
             {
-                var existingRecipe = await _recipeRepository.GetAsync(id);
-
-                var existingIngredients = await _ingredientRepository.GetAsync(x
-                    => x.Name.Contains(request.IngredientName, StringComparison.OrdinalIgnoreCase));
-
-                var newIngredient = !existingIngredients.Any()
-                    ? await _ingredientRepository.CreateAsync(new Ingredient
-                      {
-                          Name = request.IngredientName
-                      })
-                    : existingIngredients.First();
-                
-                existingRecipe.Ingredients.Add(new MeasuredIngredient
+                var recipe = await _recipeDataService.AddIngredientToRecipe(id, new MeasuredIngredient
                 {
-                    Ingredient = newIngredient,
-                    UnitOfMeasure = request.UnitOfMeasure,
-                    Amount = request.Amount
+                    Amount = request.Amount,
+                    Ingredient = new Ingredient
+                    {
+                        Name = request.IngredientName
+                    },
+                    UnitOfMeasure = request.UnitOfMeasure
                 });
 
-                await _recipeRepository.UpdateAsync(existingRecipe);
-
-                return new CreatedResult($"/api/recipes/{existingRecipe.Id}", existingRecipe);
+                return new CreatedResult($"/api/recipes/{recipe.Id}", recipe);
             }
             catch
             {

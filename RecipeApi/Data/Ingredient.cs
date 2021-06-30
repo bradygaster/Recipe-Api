@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace RecipeApi.Data
 {
-    public class Ingredient : Item
+    public class Ingredient
     {
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 }
